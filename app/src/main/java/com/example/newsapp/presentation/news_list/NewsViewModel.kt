@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newsapp.data.di.NewsRepositoryImpl
+import com.example.newsapp.data.usecase.GetNewsListUseCase
 import com.example.newsapp.domain.model.Article
 import com.example.newsapp.presentation.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +13,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NewsViewModel  @Inject constructor(private val repositoryImpl: NewsRepositoryImpl): ViewModel() {
+class NewsViewModel  @Inject constructor(
+    private val useCase: GetNewsListUseCase
+): ViewModel() {
 
     private val _newsState = mutableStateOf(NewsState())
     val newsState : State<NewsState> = _newsState
@@ -23,7 +25,7 @@ class NewsViewModel  @Inject constructor(private val repositoryImpl: NewsReposit
 
     fun fetchNews(){
         viewModelScope.launch {
-            repositoryImpl.getNews().let {result ->
+            useCase.invoke().collect{result ->
                 when(result){
                     is NetworkResult.Failure -> {
                         _newsState.value = NewsState(
@@ -43,7 +45,6 @@ class NewsViewModel  @Inject constructor(private val repositoryImpl: NewsReposit
                             isLoading = false
                         )
                         Log.d("newslistviewmodel:",result.data.toString())
-
                     }
                 }
             }
