@@ -1,6 +1,9 @@
 package com.example.newsapp.presentation
 
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,6 +25,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -39,14 +44,19 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.newsapp.R
 import com.example.newsapp.domain.model.Article
 import com.example.newsapp.navigation.Screen
-import java.net.URLEncoder
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun NewsListCardComponent(
+fun SharedTransitionScope.NewsListCardComponent(
+    animatedVisibilityScope: AnimatedVisibilityScope,
     it: Article,
     navHostController: NavHostController,
     url: String,
+    urlToImage: String,
+    title: String,
+    author: String,
+    content: String,
+    name: String,
 
     ) {
     Card(
@@ -55,7 +65,20 @@ fun NewsListCardComponent(
             .padding(8.dp),
         shape = RoundedCornerShape(4.dp),
         onClick = {
-            val route = "${Screen.NewsDetailScreen.route}?url=${Uri.encode(url)}"
+            val route =
+                "${
+                    Screen.NewsDetailScreen.route
+                }?url=${
+                    Uri.encode(url)
+                }?urlToImage=${
+                    Uri.encode(urlToImage)
+                }?title=${
+                    Uri.encode(title)
+                }?author=${
+                    Uri.encode(author)
+                }?content=${
+                    Uri.encode(content)
+                }?name=${Uri.encode(name)}"
             navHostController.navigate(route)
         }
     ) {
@@ -119,7 +142,7 @@ fun NewsListCardComponent(
                 Spacer(modifier = Modifier.width(5.dp))
 
                 Box(
-                    modifier = Modifier.padding( top = 5.dp)
+                    modifier = Modifier.padding(top = 5.dp)
                 ) {
                     Row {
                         Text(
@@ -132,7 +155,7 @@ fun NewsListCardComponent(
                         Spacer(modifier = Modifier.width(80.dp))
                         val isSelected = remember { mutableStateOf(false) }
                         Icon(
-                            painter = painterResource(id =  R.drawable.save) ,
+                            painter = painterResource(id = R.drawable.save),
                             contentDescription = "",
                             modifier = Modifier
                                 .size(20.dp)
@@ -143,7 +166,75 @@ fun NewsListCardComponent(
                     }
                 }
             }
-
         }
     }
 }
+
+@Composable
+fun HeaderDetailText(text: String) {
+    Text(
+        text = text,
+        style = TextStyle(
+            fontSize = androidx.compose.material3.MaterialTheme.typography.titleLarge.fontSize,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        ),
+        modifier = Modifier.padding(8.dp)
+    )
+}
+
+@Composable
+fun ImageNewsDetailComponent(painter: Painter) {
+    Image(
+        painter = painter,
+        contentDescription = "",
+        contentScale = ContentScale.FillWidth
+    )
+}
+
+@Composable
+fun NewsCompanyNameComponent(name: String) {
+    Row(
+        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(18.dp)
+                .clip(CircleShape)
+                .background(Color.Gray)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = null,
+                tint = Color.LightGray,
+                modifier = Modifier
+                    .size(18.dp)
+                    .align(Alignment.Center)
+            )
+        }
+
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(
+            text = name,
+            style = TextStyle(
+                fontSize = androidx.compose.material3.MaterialTheme.typography.bodySmall.fontSize,
+                color = Color.Gray
+            ),
+            modifier = Modifier.padding(top = 3.dp)
+        )
+    }
+}
+
+@Composable
+fun NewsContentComponent(content: String) {
+
+    Text(
+        modifier = Modifier.padding(16.dp),
+        text = content,
+        style = TextStyle(
+            fontSize = MaterialTheme.typography.bodySmall.fontSize,
+            color = Color.Gray
+        )
+    )
+}
+

@@ -1,6 +1,9 @@
 package com.example.newsapp.presentation.news_list
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,8 +29,10 @@ import com.example.newsapp.R
 import com.example.newsapp.presentation.NetworkResult
 import com.example.newsapp.presentation.NewsListCardComponent
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun NewsListScreen(
+fun SharedTransitionScope.NewsListScreen(
+    animatedVisibilityScope: AnimatedVisibilityScope,
     navHostController: NavHostController,
     viewModel: NewsViewModel = hiltViewModel()
 ) {
@@ -78,7 +83,17 @@ fun NewsListScreen(
                         modifier = Modifier.padding(paddingValues)
                     ) {
                         items(state.data.data) {
-                            NewsListCardComponent(it,navHostController,it.url)
+                            NewsListCardComponent(
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                it,
+                                navHostController,
+                                it.url,
+                                it.urlToImage,
+                                it.title,
+                                it.author,
+                                it.content,
+                                it.source.name
+                            )
                         }
                     }
                 }
