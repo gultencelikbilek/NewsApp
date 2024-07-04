@@ -1,6 +1,7 @@
 package com.example.newsapp.presentation
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -43,7 +44,9 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.newsapp.R
 import com.example.newsapp.domain.model.Article
+import com.example.newsapp.domain.model.ArticleData
 import com.example.newsapp.navigation.Screen
+import com.example.newsapp.presentation.news_list.NewsViewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -51,12 +54,13 @@ fun SharedTransitionScope.NewsListCardComponent(
     animatedVisibilityScope: AnimatedVisibilityScope,
     it: Article,
     navHostController: NavHostController,
-    url: String,
-    urlToImage: String,
-    title: String,
-    author: String,
-    content: String,
-    name: String,
+    url: String?,
+    urlToImage: String?,
+    title: String?,
+    author: String?,
+    content: String?,
+    name: String?,
+    favNewsViewModel: NewsViewModel,
 
     ) {
     Card(
@@ -160,7 +164,15 @@ fun SharedTransitionScope.NewsListCardComponent(
                             modifier = Modifier
                                 .size(20.dp)
                                 .clickable {
-
+                                    val articleData = ArticleData(
+                                        0,
+                                        author,
+                                        content,
+                                        title,
+                                        url
+                                    )
+                                    favNewsViewModel.addNews(articleData)
+                                    Log.d("addedd", articleData.title.toString())
                                 }
                         )
                     }
@@ -238,3 +250,23 @@ fun NewsContentComponent(content: String) {
     )
 }
 
+@Composable
+fun FavNewsCardComponent(articleData: ArticleData) {
+
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
+        shape = RoundedCornerShape(4.dp),
+
+        ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            val painter = rememberAsyncImagePainter(model = articleData.urlToImage)
+            Image(painter = painter, contentDescription = "")
+            Text(text = articleData.title.toString())
+        }
+
+    }
+}

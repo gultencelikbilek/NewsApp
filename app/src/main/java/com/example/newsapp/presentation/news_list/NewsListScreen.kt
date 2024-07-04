@@ -38,7 +38,7 @@ fun SharedTransitionScope.NewsListScreen(
 ) {
 
     val state = viewModel.newsState.value
-
+    val favState = viewModel.favNewsState.value
     when (state.data) {
         is NetworkResult.Failure -> {
             Log.d("errorscreen:", state.isError.toString())
@@ -92,7 +92,8 @@ fun SharedTransitionScope.NewsListScreen(
                                 it.title,
                                 it.author,
                                 it.content,
-                                it.source.name
+                                it.source.name,
+                                viewModel
                             )
                         }
                     }
