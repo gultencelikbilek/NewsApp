@@ -28,6 +28,8 @@ import androidx.navigation.NavHostController
 import com.example.newsapp.R
 import com.example.newsapp.presentation.NetworkResult
 import com.example.newsapp.presentation.NewsListCardComponent
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -39,6 +41,9 @@ fun SharedTransitionScope.NewsListScreen(
 
     val state = viewModel.newsState.value
     val favState = viewModel.favNewsState.value
+
+
+
     when (state.data) {
         is NetworkResult.Failure -> {
             Log.d("errorscreen:", state.isError.toString())

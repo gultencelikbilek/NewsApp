@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,6 +29,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -128,7 +131,7 @@ fun SharedTransitionScope.NewsListCardComponent(
                     Text(
                         text = it.source.name,
                         style = TextStyle(
-                            fontSize = androidx.compose.material3.MaterialTheme.typography.bodySmall.fontSize,
+                            fontSize = MaterialTheme.typography.bodySmall.fontSize,
                             color = Color.Gray
                         ),
                         modifier = Modifier.padding(top = 3.dp)
@@ -138,7 +141,7 @@ fun SharedTransitionScope.NewsListCardComponent(
                 Text(
                     text = it.title,
                     style = TextStyle(
-                        fontSize = androidx.compose.material3.MaterialTheme.typography.titleSmall.fontSize,
+                        fontSize = MaterialTheme.typography.titleSmall.fontSize,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
@@ -152,27 +155,33 @@ fun SharedTransitionScope.NewsListCardComponent(
                         Text(
                             text = it.publishedAt,
                             style = TextStyle(
-                                fontSize = androidx.compose.material3.MaterialTheme.typography.bodySmall.fontSize,
+                                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                                 color = Color.Gray
                             )
                         )
                         Spacer(modifier = Modifier.width(80.dp))
-                        val isSelected = remember { mutableStateOf(false) }
+                        val isAdded by favNewsViewModel.isAdded.collectAsState()
+                        val isSelelcted by remember {
+                            mutableStateOf(false)
+                        }
                         Icon(
-                            painter = painterResource(id = R.drawable.save),
+                            painter = painterResource(
+                                id = R.drawable.save
+                            ),
                             contentDescription = "",
                             modifier = Modifier
                                 .size(20.dp)
                                 .clickable {
-                                    val articleData = ArticleData(
-                                        0,
-                                        author,
-                                        content,
-                                        title,
-                                        url
-                                    )
-                                    favNewsViewModel.addNews(articleData)
-                                    Log.d("addedd", articleData.title.toString())
+
+                                        val articleData = ArticleData(
+                                            0,
+                                            author,
+                                            content,
+                                            title,
+                                            url
+                                        )
+                                        favNewsViewModel.addNews(articleData)
+
                                 }
                         )
                     }
@@ -187,7 +196,7 @@ fun HeaderDetailText(text: String) {
     Text(
         text = text,
         style = TextStyle(
-            fontSize = androidx.compose.material3.MaterialTheme.typography.titleLarge.fontSize,
+            fontSize = MaterialTheme.typography.titleLarge.fontSize,
             fontWeight = FontWeight.Bold,
             color = Color.Black
         ),
@@ -229,7 +238,7 @@ fun NewsCompanyNameComponent(name: String) {
         Text(
             text = name,
             style = TextStyle(
-                fontSize = androidx.compose.material3.MaterialTheme.typography.bodySmall.fontSize,
+                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                 color = Color.Gray
             ),
             modifier = Modifier.padding(top = 3.dp)
@@ -264,9 +273,33 @@ fun FavNewsCardComponent(articleData: ArticleData) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             val painter = rememberAsyncImagePainter(model = articleData.urlToImage)
-            Image(painter = painter, contentDescription = "")
-            Text(text = articleData.title.toString())
+            Image(
+                painter = painter,
+                contentDescription = "",
+                modifier = Modifier.size(80.dp)
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 8.dp)
+            ) {
+                Text(
+                    text = articleData.title.toString(),
+                    style = TextStyle(
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                        color = Color.Black
+                    )
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = articleData.author.toString(),
+                    style = TextStyle(
+                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                        color = Color.Gray
+                    )
+                )
+            }
         }
-
     }
 }

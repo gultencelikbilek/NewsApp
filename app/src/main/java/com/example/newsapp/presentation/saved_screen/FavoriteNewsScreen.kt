@@ -13,8 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.newsapp.R
 import com.example.newsapp.presentation.FavNewsCardComponent
 
 @Composable
@@ -35,8 +39,16 @@ fun FavoriteNewsScreen(
 
     Scaffold(
         topBar = {
-                 TopAppBar(title = { androidx.compose.material.Text(text = "SDLOSDK")})
+            TopAppBar(
+                title = {
+                    androidx.compose.material.Text(text = stringResource(id = R.string.fav))
+                },
+                backgroundColor = Color.White
+                )
         },
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 30.dp),
         content = { paddingValues ->
             if (state.data != null) {
                 LazyColumn(

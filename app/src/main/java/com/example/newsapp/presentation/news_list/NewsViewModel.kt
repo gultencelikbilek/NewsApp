@@ -11,6 +11,8 @@ import com.example.newsapp.domain.model.Article
 import com.example.newsapp.domain.model.ArticleData
 import com.example.newsapp.presentation.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,6 +29,8 @@ class NewsViewModel @Inject constructor(
     private val _favNewsState = mutableStateOf(FavoriteNewsState())
     val favNewsState: State<FavoriteNewsState> = _favNewsState
 
+    private val _isAdded = MutableStateFlow<Boolean?>(null)
+    val isAdded: StateFlow<Boolean?> = _isAdded
     init {
         fetchNews()
     }
@@ -54,6 +58,7 @@ class NewsViewModel @Inject constructor(
                             isError = null,
                             isLoading = false
                         )
+
                         Log.d("newslistviewmodel:", result.data.toString())
                     }
                 }
@@ -67,9 +72,11 @@ class NewsViewModel @Inject constructor(
             try {
                 addNewsUseCase.invoke(articledata)
                 _favNewsState.value = FavoriteNewsState(success = true)
+                _isAdded.value = true
                 Log.d("succes", _favNewsState.value.toString())
             } catch (e: Exception) {
                 _favNewsState.value = FavoriteNewsState(isError = e.message)
+                _isAdded.value = false
             }
         }
     }
