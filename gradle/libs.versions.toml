@@ -33,6 +33,10 @@ converterGson = "2.9.0"
 maps = "3.1.0-beta"
 retrofit = "2.9.0"
 wearable = "2.9.0"
+serialization = "1.6.10"
+datastore = "1.1.1"
+kotlinxCollectionsImmutable = "0.3.5"
+kotlinxSerializationJson = "1.3.2"
 
 [libraries]
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
@@ -73,6 +77,9 @@ maps = { module = "com.google.android.libraries.maps:maps", version.ref = "maps"
 wearable = { group = "com.google.android.support", name = "wearable", version.ref = "wearable" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 
 
 
@@ -80,4 +87,5 @@ converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hiltInject = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization",version.ref = "serialization"}
 

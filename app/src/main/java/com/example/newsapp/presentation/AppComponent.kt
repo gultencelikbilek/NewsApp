@@ -27,6 +27,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,12 +44,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.newsapp.R
 import com.example.newsapp.domain.model.Article
 import com.example.newsapp.domain.model.ArticleData
 import com.example.newsapp.navigation.Screen
+import com.example.newsapp.presentation.news_detail.datastore.DataStoreNewsViewModel
 import com.example.newsapp.presentation.news_list.NewsViewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalSharedTransitionApi::class)
@@ -63,9 +66,12 @@ fun SharedTransitionScope.NewsListCardComponent(
     author: String?,
     content: String?,
     name: String?,
-    favNewsViewModel: NewsViewModel,
+    newsViewModel: NewsViewModel
+) {
+    val viewModel: DataStoreNewsViewModel = hiltViewModel()
+    val favoriteNews by viewModel.favoriteNews.collectAsState()
+    val isFavorite = favoriteNews.contains(url)
 
-    ) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -160,36 +166,37 @@ fun SharedTransitionScope.NewsListCardComponent(
                             )
                         )
                         Spacer(modifier = Modifier.width(80.dp))
-                        val isAdded by favNewsViewModel.isAdded.collectAsState()
-                        val isSelelcted by remember {
-                            mutableStateOf(false)
+
+                        IconButton(onClick = {
+                            if (isFavorite) {
+                                viewModel.removeFavoriteNews(url!!)
+                                val articleData = ArticleData(
+                                    0, author, content, title, url
+                                )
+                                newsViewModel.deleteNews(url)
+                            } else {
+                                viewModel.addFavoriteNews(url!!)
+                                val articleData = ArticleData(
+                                    0, author, content, title, url
+                                )
+                                newsViewModel.addNews(articleData)
+                            }
+                        }) {
+                            Icon(
+                                painter = painterResource(
+                                    id = if (isFavorite) R.drawable.save_full else R.drawable.save
+                                ),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
                         }
-                        Icon(
-                            painter = painterResource(
-                                id = R.drawable.save
-                            ),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .size(20.dp)
-                                .clickable {
-
-                                        val articleData = ArticleData(
-                                            0,
-                                            author,
-                                            content,
-                                            title,
-                                            url
-                                        )
-                                        favNewsViewModel.addNews(articleData)
-
-                                }
-                        )
                     }
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun HeaderDetailText(text: String) {

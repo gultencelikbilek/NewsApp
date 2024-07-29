@@ -4,6 +4,7 @@ plugins {
     //  alias(libs.plugins.org.jetbrains.kotlin.kapt)
     kotlin("kapt")
     alias(libs.plugins.hiltInject)
+    alias(libs.plugins.serialization)
 
 }
 
@@ -119,6 +120,10 @@ dependencies {
     kapt (libs.hilt.compiler)
     implementation (libs.androidx.hilt.navigation.compose)
 
+    //serilization
+    implementation (libs.androidx.datastore)
+    implementation (libs.kotlinx.collections.immutable)
+    implementation (libs.kotlinx.serialization.json)
 
     //room
     implementation (libs.androidx.room.runtime)

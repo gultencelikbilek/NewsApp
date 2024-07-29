@@ -1,5 +1,6 @@
 package com.example.newsapp.navigation
 
+import android.content.Context
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.animateColorAsState
@@ -18,6 +19,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -27,6 +30,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.newsapp.R
 import com.example.newsapp.presentation.news_detail.NewsDetailsScreen
+import com.example.newsapp.presentation.news_detail.datastore.FavoriteNewsSettings
+import com.example.newsapp.presentation.news_detail.datastore.FavoriteNewsSettingsSerializer
 import com.example.newsapp.presentation.news_list.NewsListScreen
 import com.example.newsapp.presentation.saved_screen.FavoriteNewsScreen
 
@@ -52,7 +57,10 @@ sealed class BottomNavItem(
         "Saved"
     )
 }
-
+private val Context.favoriteNewsDataStore: DataStore<FavoriteNewsSettings> by dataStore(
+    fileName = "favorite_news_settings.json",
+    serializer = FavoriteNewsSettingsSerializer
+)
 @Composable
 fun AppBottomNavigation(navController: NavController) {
     val items = listOf(

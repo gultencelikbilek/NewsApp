@@ -1,6 +1,7 @@
 package com.example.newsapp.data.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -15,4 +16,6 @@ interface FavoriteNewsDao {
     @Query("SELECT * FROM articledata")
     suspend fun getFavNewsList() : List<ArticleData>
 
+    @Delete
+    suspend fun deleteNews(article: ArticleData)
 }

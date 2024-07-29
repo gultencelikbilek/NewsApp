@@ -12,6 +12,10 @@ class FavoriteNewsRepositoryImpl @Inject constructor(@ApplicationContext val app
         AppModule.providesDatabase(app).newsDao().addNews(articledata)
     }
 
+    override suspend fun deleteNews(articledata: ArticleData) {
+        AppModule.providesDatabase(app).newsDao().deleteNews(articledata)
+    }
+
     override suspend fun getFavNewsList(): List<ArticleData> {
       return AppModule.providesDatabase(app).newsDao().getFavNewsList()
     }
