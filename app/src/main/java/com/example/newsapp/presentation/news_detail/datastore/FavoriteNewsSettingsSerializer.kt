@@ -15,7 +15,6 @@ object FavoriteNewsSettingsSerializer : Serializer<FavoriteNewsSettings> {
     // `readFrom` fonksiyonu, bir `InputStream`'den JSON verisini okuyarak `FavoriteNewsSettings` nesnesine dönüştürür.
     override suspend fun readFrom(input: InputStream): FavoriteNewsSettings {
         return try {
-            // `Json.decodeFromString` kullanarak JSON verisini `FavoriteNewsSettings` nesnesine dönüştürür.
             Json.decodeFromString(
                 FavoriteNewsSettings.serializer(),
                 input.readBytes().decodeToString()
@@ -25,9 +24,7 @@ object FavoriteNewsSettingsSerializer : Serializer<FavoriteNewsSettings> {
         }
     }
 
-    // `writeTo` fonksiyonu, `FavoriteNewsSettings` nesnesini JSON formatında bir `OutputStream`'e yazar.
     override suspend fun writeTo(t: FavoriteNewsSettings, output: OutputStream) {
-        // `Json.encodeToString` kullanarak `FavoriteNewsSettings` nesnesini JSON string'ine dönüştürür.
         output.write(Json.encodeToString(FavoriteNewsSettings.serializer(), t).encodeToByteArray())
     }
 }

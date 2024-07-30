@@ -1,13 +1,11 @@
 package com.example.newsapp.presentation
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,8 +30,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -68,9 +64,11 @@ fun SharedTransitionScope.NewsListCardComponent(
     name: String?,
     newsViewModel: NewsViewModel
 ) {
+    val article = ArticleData()
     val viewModel: DataStoreNewsViewModel = hiltViewModel()
     val favoriteNews by viewModel.favoriteNews.collectAsState()
-    val isFavorite = favoriteNews.contains(url)
+    var isFavorite = favoriteNews.contains(url)
+
 
     Card(
         modifier = Modifier
@@ -166,21 +164,19 @@ fun SharedTransitionScope.NewsListCardComponent(
                             )
                         )
                         Spacer(modifier = Modifier.width(80.dp))
-
                         IconButton(onClick = {
+                            val articleData = ArticleData(
+                                0, author, content, title, url
+                            )
+                            val iconResId = if (isFavorite) R.drawable.save_full else R.drawable.save
                             if (isFavorite) {
                                 viewModel.removeFavoriteNews(url!!)
-                                val articleData = ArticleData(
-                                    0, author, content, title, url
-                                )
-                                newsViewModel.deleteNews(url)
+                                newsViewModel.deleteNews(articleData)
                             } else {
                                 viewModel.addFavoriteNews(url!!)
-                                val articleData = ArticleData(
-                                    0, author, content, title, url
-                                )
                                 newsViewModel.addNews(articleData)
                             }
+                            isFavorite = !isFavorite
                         }) {
                             Icon(
                                 painter = painterResource(

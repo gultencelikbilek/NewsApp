@@ -88,9 +88,9 @@ class NewsViewModel @Inject constructor(
         try {
             deleteNewsUseCase.invoke(articledata)
             _deleteNewsState.value = FavoriteNewsState(success = true)
-        }catch (e : Exception){
-            _favNewsState.value = FavoriteNewsState(isError = e.message)
-            _isAdded.value = false
+            Log.d("NewsViewModel", "News deleted: $articledata")
+        } catch (e: Exception) {
+            Log.e("NewsViewModel", "Error deleting news: $e")
         }
     }
 }

@@ -36,7 +36,7 @@ class DataStoreNewsViewModel @Inject constructor(application: Application) : And
             DataStoreManager.removeFavoriteNews(getApplication(), newsId)
         }
     }
-    // Verilen haber ID'sinin favorilerde olup olmadığını kontrol eder.
+
     fun isFavorite(newsId: String): Boolean {
         return favoriteNews.value.contains(newsId)
     }

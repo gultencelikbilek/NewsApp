@@ -33,7 +33,6 @@ object DataStoreManager {
             settings.copy(favoriteNewsIds = settings.favoriteNewsIds - newsId)
         }
     }
-
     // `getFavoriteNews` fonksiyonu, favori haberler listesini döndürür.
     // `Flow` kullanarak veri akışını yönetiriz ve olası hataları yakalarız.
     fun getFavoriteNews(context: Context): Flow<Set<String>> {
